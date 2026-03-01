@@ -1,16 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Table, Button, Spinner, Alert, Badge } from 'react-bootstrap';
 import axios from 'axios';
 import './task-logs.css';
 
 const TaskLogs = () => {
   const [logs, setLogs] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedLogId, setSelectedLogId] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const logsPerPage = 5;
+  const [showFilter, setShowFilter] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const [filters, setFilters] = useState({
+    type: "all",
+    status: "all",
+    dateFrom: "",
+    dateTo: "",
+    sort: "newest"
+  });
+
+  const activeFiltersCount =
+    (filters.type !== "all" ? 1 : 0) +
+    (filters.status !== "all" ? 1 : 0) +
+    (filters.dateFrom ? 1 : 0) +
+    (filters.dateTo ? 1 : 0);
+
+  const clearFilters = () => {
+    setFilters({
+      type: "all",
+      status: "all",
+      dateFrom: "",
+      dateTo: "",
+      sort: "newest"
+    });
+  };
 
   const navigate = useNavigate();
 
@@ -66,6 +94,70 @@ const TaskLogs = () => {
     fetchLogs();
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        !event.target.closest(".filter-btn")
+      ) {
+        setShowFilter(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filters]);
+
+  const filteredLogs = logs
+    .filter((log) => {
+
+      const matchesType =
+        filters.type === "all" ||
+        log.task_type === filters.type;
+
+      const matchesStatus =
+        filters.status === "all" ||
+        log.status === filters.status;
+
+      const matchesSearch =
+        searchTerm === "" ||
+        JSON.stringify(log).toLowerCase().includes(searchTerm.toLowerCase());
+
+      const logDate = new Date(log.timestamp);
+
+      const matchesFrom =
+        !filters.dateFrom || logDate >= new Date(filters.dateFrom);
+
+      const matchesTo =
+        !filters.dateTo || logDate <= new Date(filters.dateTo + "T23:59:59");
+
+      return (
+        matchesType &&
+        matchesStatus &&
+        matchesSearch &&
+        matchesFrom &&
+        matchesTo
+      );
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.timestamp);
+      const dateB = new Date(b.timestamp);
+      return filters.sort === "newest"
+        ? dateB - dateA
+        : dateA - dateB;
+    });
+
+  const indexOfLast = currentPage * logsPerPage;
+  const indexOfFirst = indexOfLast - logsPerPage;
+  const currentLogs = filteredLogs.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(filteredLogs.length / logsPerPage);
+
   return (
     <div className="logs-wrapper">
 
@@ -75,13 +167,114 @@ const TaskLogs = () => {
           <p>Monitor all AI task executions and system responses.</p>
         </div>
 
-        <button
-          className="logs-refresh-btn"
-          onClick={fetchLogs}
-          disabled={loading}
-        >
-          {loading ? "Refreshing..." : "Refresh Logs"}
-        </button>
+        <div className="logs-actions">
+
+          <input
+            type="text"
+            placeholder="Search keyword..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="logs-search"
+          />
+
+          <button
+            className="filter-btn"
+            onClick={() => setShowFilter(prev => !prev)}
+          >
+            Filter
+            {activeFiltersCount > 0 && (
+              <span className="filter-badge">
+                {activeFiltersCount}
+              </span>
+            )}
+          </button>
+
+          <button
+            className="logs-refresh-btn"
+            onClick={fetchLogs}
+            disabled={loading}
+          >
+            {loading ? "Refreshing..." : "Refresh Logs"}
+          </button>
+
+          <div
+            className={`filter-dropdown ${showFilter ? "show" : ""}`}
+            ref={dropdownRef}
+          >
+
+            <div className="filter-group">
+              <label>Task Type</label>
+              <select
+                value={filters.type}
+                onChange={(e) =>
+                  setFilters({ ...filters, type: e.target.value })
+                }
+              >
+                <option value="all">All Types</option>
+                <option value="generate">Generate</option>
+                <option value="summarize">Summarize</option>
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>Status</label>
+              <select
+                value={filters.status}
+                onChange={(e) =>
+                  setFilters({ ...filters, status: e.target.value })
+                }
+              >
+                <option value="all">All Status</option>
+                <option value="success">Success</option>
+                <option value="failure">Failed</option>
+              </select>
+            </div>
+
+            <div className="filter-group">
+              <label>Date From</label>
+              <input
+                type="date"
+                value={filters.dateFrom}
+                onChange={(e) =>
+                  setFilters({ ...filters, dateFrom: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="filter-group">
+              <label>Date To</label>
+              <input
+                type="date"
+                value={filters.dateTo}
+                onChange={(e) =>
+                  setFilters({ ...filters, dateTo: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="filter-group">
+              <label>Sort By</label>
+              <select
+                value={filters.sort}
+                onChange={(e) =>
+                  setFilters({ ...filters, sort: e.target.value })
+                }
+              >
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+            </div>
+            <div className="filter-footer">
+              <button
+                className="clear-btn"
+                onClick={clearFilters}
+              >
+                Clear Filters
+              </button>
+            </div>
+          </div>
+
+        </div>
       </div>
 
       {error && <div className="logs-error">{error}</div>}
@@ -92,13 +285,14 @@ const TaskLogs = () => {
           <div className="skeleton-box skeleton-card"></div>
           <div className="skeleton-box skeleton-card"></div>
         </div>
+
       ) : logs.length === 0 ? (
         <div className="logs-empty">
           No tasks have been executed yet.
         </div>
       ) : (
         <div className="logs-list">
-          {logs.map((log) => (
+          {currentLogs.map((log) => (
             <div key={log.id} className="log-card">
 
               <div className="log-top">
@@ -125,20 +319,38 @@ const TaskLogs = () => {
                 </div>
               )}
 
-              <div className="log-input">
-                <pre>
-                  {JSON.stringify(
-                    log.task_type === "summarize" && log.input_parameters.text
-                      ? {
-                        text:
-                          log.input_parameters.text.slice(0, 100) + "..."
-                      }
-                      : log.input_parameters,
-                    null,
-                    2
-                  )}
-                </pre>
+              <div className="log-section">
+                <div className="log-label">Input</div>
+                <div className="log-json">
+                  <pre>
+                    {JSON.stringify(
+                      log.task_type === "summarize" &&
+                        log.input_parameters?.text
+                        ? {
+                          ...log.input_parameters,
+                          text:
+                            log.input_parameters.text.length > 100
+                              ? log.input_parameters.text.slice(0, 100) + "..."
+                              : log.input_parameters.text
+                        }
+                        : log.input_parameters,
+                      null,
+                      2
+                    )}
+                  </pre>
+                </div>
               </div>
+
+              {log.status === "success" && log.output_data && (
+                <div className="log-section">
+                  <div className="log-label output">Output</div>
+                  <div className="log-json output-box">
+                    <pre>
+                      {JSON.stringify(log.output_data, null, 2)}
+                    </pre>
+                  </div>
+                </div>
+              )}
 
               <div className="log-actions">
                 <button
@@ -157,6 +369,28 @@ const TaskLogs = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {!loading && totalPages > 1 && (
+        <div className="pagination">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(prev => prev - 1)}
+          >
+            Prev
+          </button>
+
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(prev => prev + 1)}
+          >
+            Next
+          </button>
         </div>
       )}
 

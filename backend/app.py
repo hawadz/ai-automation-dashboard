@@ -85,7 +85,8 @@ def generate_content():
         "content_type": content_type,
         "genre": genre,
         "tone": tone,
-        "count": count
+        "count": count,
+        "additional_context": additional_context or ""
     }
 
     try:
@@ -121,7 +122,10 @@ def summarize_document():
     data = request.json
     text = data.get('text', '')
 
-    input_params = {"text": text}
+    input_params = {
+        "text": text,
+        "additional_context": ""
+    }
 
     if not text:
         return jsonify({"success": False, "error": "Text is required"}), 400

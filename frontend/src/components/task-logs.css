@@ -7,7 +7,7 @@
 .logs-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 25px;
 }
 
@@ -21,13 +21,136 @@
   font-size: 14px;
 }
 
+.logs-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.filter-btn {
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 14px;
+  border: 1px solid #E2E8F0;
+  background: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+  border-color: #8B5CF6;
+  box-shadow: 0 4px 12px rgba(139,92,246,0.15);
+}
+
+.filter-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #8B5CF6;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+.filter-btn:hover {
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.filter-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  z-index: 1000;
+
+  width: 320px;              
+  padding: 24px;             
+  border-radius: 20px;
+
+  background: white;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.08);
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.filter-dropdown.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.filter-footer {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: #8B5CF6;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.clear-btn:hover {
+  text-decoration: underline;
+}
+
+/* LABEL */
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-group label {
+  font-size: 12px;
+  color: #64748B;
+  font-weight: 500;
+}
+
+/* INPUT & SELECT */
+.filter-dropdown select,
+.filter-dropdown input {
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid #E2E8F0;
+  background: #F8FAFC;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.filter-dropdown select:focus,
+.filter-dropdown input:focus {
+  outline: none;
+  border-color: #8B5CF6;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
+}
+
 /* REFRESH BUTTON */
 .logs-refresh-btn {
+  height: 42px;
   background: linear-gradient(135deg,#6366F1,#8B5CF6);
   color: white;
   border: none;
-  padding: 10px 18px;
-  border-radius: 10px;
+  padding: 0 20px;
+  border-radius: 14px;
   font-weight: 500;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(99,102,241,0.25);
@@ -147,6 +270,45 @@
   gap: 4px;
 }
 
+.log-section {
+  margin-top: 16px;
+}
+
+.log-json {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.log-label {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.log-label.output {
+  color: #8B5CF6;
+}
+
+.log-json {
+  background: #0F172A;
+  color: #E2E8F0;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  overflow-x: auto;
+}
+
+.log-json.output-box {
+  background: #111827;
+}
+
+.log-json pre {
+  margin: 0;
+}
+
 .delete-btn {
   background: linear-gradient(135deg,#EF4444,#DC2626);
   border: none;
@@ -181,6 +343,55 @@ body.dark-mode .log-input {
 
 .log-input pre {
   margin: 0;
+}
+
+.logs-search {
+  height: 42px;
+  width: 260px;
+  padding: 0 16px;
+  border-radius: 14px;
+  border: 1px solid #E2E8F0;
+  background: #F8FAFC;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.logs-search::placeholder {
+  color: #94A3B8;
+}
+
+.logs-search:focus {
+  outline: none;
+  border-color: #8B5CF6;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
+}
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+}
+
+.pagination button {
+  background: linear-gradient(135deg,#6366F1,#8B5CF6);
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
 }
 
 /* ===== MODAL ===== */
