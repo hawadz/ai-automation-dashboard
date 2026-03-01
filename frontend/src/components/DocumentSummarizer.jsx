@@ -10,6 +10,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isViewingPrevious, setIsViewingPrevious] = useState(false);
+  const [showValidationModal, setShowValidationModal] = useState(false);
   const resultRef = useRef(null);
 
   useEffect(() => {
@@ -47,7 +48,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     if (!text.trim()) {
-      setError("Please enter some text to summarize.");
+      setShowValidationModal(true);
       return;
     }
 
@@ -83,7 +84,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
         <p>Extract key insights from long game design documents or lore.</p>
       </div>
 
-      <div className={`summarizer-card ${loading ? "loading-blur" : ""}`}>
+      <div className="summarizer-card">
 
         <Form onSubmit={handleSubmit}>
 
@@ -103,7 +104,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
               rows={8}
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="Paste your long document text here..."
+              disabled={loading}
             />
           </Form.Group>
 
@@ -112,8 +113,6 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
           </button>
 
         </Form>
-
-        {error && <div className="summarizer-error">{error}</div>}
 
       </div>
 
@@ -199,7 +198,33 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
 
         </div>
       )}
+      {showValidationModal && (
+        <div className="custom-modal-overlay">
+          <div className="custom-modal">
 
+            <div className="modal-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path d="M12 9v4" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
+                <path d="M12 17h.01" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
+                <circle cx="12" cy="12" r="10" stroke="#EF4444" strokeWidth="2" />
+              </svg>
+            </div>
+
+            <h4>Text Required</h4>
+            <p>Please enter or upload a document before summarizing.</p>
+
+            <div className="modal-actions">
+              <button
+                className="modal-btn cancel"
+                onClick={() => setShowValidationModal(false)}
+              >
+                Close
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 };
