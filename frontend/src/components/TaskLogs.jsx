@@ -10,6 +10,7 @@ const TaskLogs = () => {
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedLogId, setSelectedLogId] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const navigate = useNavigate();
 
@@ -48,12 +49,14 @@ const TaskLogs = () => {
   };
 
   const confirmDelete = async () => {
+    setDeleting(true);
     try {
       await axios.delete(`http://127.0.0.1:5000/api/logs/${selectedLogId}`);
       fetchLogs();
     } catch (err) {
       console.error(err);
     } finally {
+      setDeleting(false);
       setShowDeleteModal(false);
       setSelectedLogId(null);
     }
@@ -158,16 +161,16 @@ const TaskLogs = () => {
       )}
 
       {showDeleteModal && (
-        <div className="delete-overlay">
-          <div className="delete-modal">
+        <div className="custom-modal-overlay">
+          <div className="custom-modal">
 
-            <div className="delete-icon">
+            <div className="modal-icon">
               <svg
                 width="40"
                 height="40"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="#302251"
+                stroke="#e33339"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -183,16 +186,16 @@ const TaskLogs = () => {
             <h5>Are you sure?</h5>
             <p>This log will be deleted permanently.</p>
 
-            <div className="delete-actions">
+            <div className="modal-actions">
               <button
-                className="cancel-btn"
+                className="modal-btn cancel"
                 onClick={() => setShowDeleteModal(false)}
               >
                 Cancel
               </button>
 
               <button
-                className="confirm-delete-btn"
+                className="modal-btn danger"
                 onClick={confirmDelete}
               >
                 Delete
