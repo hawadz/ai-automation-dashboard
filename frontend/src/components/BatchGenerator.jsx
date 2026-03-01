@@ -16,6 +16,7 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
+  const [showValidationModal, setShowValidationModal] = useState(false);
 
   useEffect(() => {
     if (rerunData) {
@@ -41,6 +42,17 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (
+      !formData.content_type ||
+      !formData.genre ||
+      !formData.tone ||
+      !formData.count
+    ) {
+      setShowValidationModal(true);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -139,7 +151,7 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
         <p>Generate multiple structured AI outputs in one request.</p>
       </div>
 
-      <div className={`batch-card ${loading ? "loading-blur" : ""}`}>
+      <div className="batch-card">
 
         <Form onSubmit={handleSubmit}>
 
@@ -152,7 +164,6 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
                 value={formData.content_type}
                 onChange={handleChange}
                 placeholder="e.g. NPC dialogue lines"
-                required
               />
             </Form.Group>
 
@@ -164,7 +175,6 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
                 value={formData.genre}
                 onChange={handleChange}
                 placeholder="e.g. Fantasy, Sci-Fi"
-                required
               />
             </Form.Group>
 
@@ -176,7 +186,6 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
                 value={formData.tone}
                 onChange={handleChange}
                 placeholder="e.g. Neutral, Dark, Humorous"
-                required
               />
             </Form.Group>
 
@@ -189,7 +198,6 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
                 onChange={handleChange}
                 min="1"
                 max="10"
-                required
               />
             </Form.Group>
           </div>
@@ -293,7 +301,30 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
           ))}
         </div>
       )}
+      {showValidationModal && (
+        <div className="custom-modal-overlay">
+          <div className="custom-modal">
+            <div className="modal-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path d="M12 9v4" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
+                <path d="M12 17h.01" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
+                <circle cx="12" cy="12" r="10" stroke="#EF4444" strokeWidth="2" />
+              </svg>
+            </div>
+            <h4>Form Incomplete</h4>
+            <p>Please fill all required fields before generating content.</p>
 
+            <div className="modal-actions">
+              <button
+                className="modal-btn cancel"
+                onClick={() => setShowValidationModal(false)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
