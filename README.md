@@ -1,37 +1,101 @@
-# Agate AI Suite
+# Agate AI Suite — Content Pipeline Dashboard (Option B)
 
-Agate AI Suite is a simple AI-powered web application built to support basic game development workflows. This project was built as part of a technical assessment.
+Agate AI Suite is a full-stack AI-powered content automation dashboard built for internal game studio workflows.
 
-It provides two main features: **Batch Content Generator** and **Document Summarizer**. The app also logs every execution and shows basic statistics on a centralized dashboard.
+This project was developed as part of the **Agate Technical Test — Option B (Content Pipeline Dashboard)**.
 
-## Project Overview
+It focuses on delivering a functional end-to-end MVP that integrates real AI services, persistent logging, and a clean dashboard interface within a limited time constraint.
+
+---
+
+## Repository
+
+**GitHub:** https://github.com/hawadz/ai-automation-dashboard
+
+---
+
+## Live Demo
+
+**Deployment Platform:** Vercel  
+**Public URL:** *(To be added after deployment)*
+
+---
+
+## Option Chosen
+
+**Option B — Content Pipeline Dashboard**
+
+This option was selected to demonstrate:
+- Breadth of feature implementation  
+- Real AI API integration  
+- Functional end-to-end architecture  
+- Clean full-stack structure  
+- Production-minded logging system  
+
+---
+
+## Core Features
 
 ### 1. Batch Content Generator
-Generate multiple pieces of structured content in a single request.
+Generate multiple structured content items in a single request.
 
 Users can specify:
-- Content type
+- Content type (e.g., NPC dialogue, item descriptions, quest summaries)
 - Genre
 - Tone
 - Number of items
 - Additional context
 
-> **Note:** The system stores each generation in a task log and allows users to re-open previous results without regenerating them, saving API costs.
+**Features:**
+- Structured JSON output
+- Clean list display
+- Persistent logging
+- Re-run previous generations
+- Search and filter support via Task Logs
+
+*All generations are stored in the database with execution duration and status tracking.*
 
 ### 2. Document Summarizer
-Summarizes long text into structured, easy-to-read formats:
+Summarizes long text into structured output including:
 - TL;DR
-- Key points
-- Action items
+- Key Points
+- Action Items
 
-> **Note:** Previous summaries are stored and can be revisited through the Task Logs page at any time.
+**Features:**
+- Structured JSON response
+- Persistent task history
+- Error handling for empty inputs
+- Clean loading states
+- Accessible from centralized logs
 
 ### 3. Task Logs & Dashboard
-- Stores the input and output of each task.
-- Tracks execution duration for performance monitoring.
-- Displays the overall success rate.
-- Shows the number of active tasks.
-- Allows a "rerun" with a previous result preview before making a new API call.
+A centralized monitoring system for all AI task executions.
+
+**Each task stores:**
+- Timestamp
+- Task type
+- Input parameters
+- Output data
+- Status (success / failure)
+- Execution duration
+
+**Dashboard metrics include:**
+- Total generations
+- Success rate
+- Tasks executed today
+- Average execution duration
+
+**Additional capabilities:**
+- Re-run previous tasks
+- Delete logs
+- Pagination
+- Search functionality
+- Filtering by type, status, and date
+- Dark mode support
+
+*Persistent storage is implemented using SQLite.*
+
+---
 
 ## Tech Stack
 
@@ -39,76 +103,139 @@ Summarizes long text into structured, easy-to-read formats:
 - React (Vite)
 - React Router
 - Axios
-- React Bootstrap
+- Custom CSS (responsive & dark mode)
 
 **Backend:**
 - Flask
 - SQLAlchemy
 - SQLite
-- OpenAI API
+- OpenAI API (GPT-4o-mini)
+- Python-dotenv
+- Flask-CORS
 
-## Setup Instructions
+**Deployment:**
+- Vercel (Frontend)
+- Backend deployed separately (if applicable)
 
-### 1. Clone the Repository
-
-    git clone <your-repository-url>
-    cd <repository-folder>
-
-### 2. Backend Setup
-Create a virtual environment (optional but highly recommended):
-
-    python -m venv venv
-    venv\Scripts\activate   # Windows
-    source venv/bin/activate # macOS/Linux
-
-Install dependencies:
-
-    pip install -r requirements.txt
-
-Create a .env file in the backend folder and add your API key:
-
-    OPENAI_API_KEY=your_api_key_here
-
-Run the backend server:
-
-    python app.py
-
-*The backend runs on: http://localhost:5000*
-
-### 3. Frontend Setup
-Navigate to the frontend folder:
-
-    cd frontend
-    npm install
-    npm run dev
-
-*The frontend runs on: http://localhost:5173*
-
-## Deployment
-
-**Public URL:** *(To be added)*
-
-The application will be deployed using a public hosting service such as Vercel, Render, Railway, or Fly.io.
+---
 
 ## Time Log
 
-| Task | Estimated Time |
+**Start Time:** 2026-02-25 09:00 WIB  
+**End Time:** 2026-02-25 17:10 WIB  
+**Total Working Time:** ~7 hours 40 minutes  
+
+| Activity | Duration |
 | :--- | :--- |
-| Project setup | 2 hours |
-| Backend API development | 4 hours |
-| Frontend UI implementation | 5 hours |
-| Database & logging system | 3 hours |
-| Rerun logic & UX improvements | 3 hours |
-| Testing & debugging | 2 hours |
-| **Total** | **~19 hours** |
+| Project setup & environment configuration | 1 hour |
+| Backend API structure & OpenAI integration | 2 hours |
+| Database model & persistent logging system | 1 hour |
+| Batch Content Generator implementation | 1 hour |
+| Document Summarizer implementation | 50 minutes |
+| Task Logs (filter, search, pagination, rerun) | 1 hour |
+| Dashboard metrics & analytics | 40 minutes |
+| UI polish, dark mode & UX refinement | 30 minutes |
+| Debugging & deployment preparation | 30 minutes |
+
+---
 
 ## AI Tools Used
 
-- **OpenAI (GPT-4o-mini):** Used for content generation and text summarization.
-- **ChatGPT:** Used for development assistance, including debugging, architectural suggestions, and code refinement.
+This technical test intentionally leveraged AI-assisted development as encouraged in the instructions.
 
-## Notes
+### 1. OpenAI (GPT-4o-mini)
+Used for:
+- Content generation
+- Structured summarization
+- JSON-formatted outputs
+- Prompt engineering refinement
 
-- The commit history reflects meaningful development milestones.
-- The application stores both input and output for each task to maintain a reliable history.
-- The rerun feature previews previous results before regenerating, preventing accidental and unnecessary API calls.
+Prompts were structured to:
+- Enforce valid JSON responses
+- Reduce hallucinations
+- Ensure consistent structured outputs
+
+*The `response_format={"type": "json_object"}` parameter was used to enforce JSON compliance.*
+
+### 2. ChatGPT
+Used for:
+- Debugging backend configuration issues
+- Refining prompt structure
+- Improving frontend architecture
+- Code cleanup and refactoring
+- UX optimization suggestions
+- Error handling improvements
+
+*AI tools were used as development accelerators while maintaining architectural decisions and implementation control.*
+
+---
+
+## Setup Instructions
+
+### 1. Clone Repository
+```bash
+git clone [https://github.com/hawadz/ai-automation-dashboard](https://github.com/hawadz/ai-automation-dashboard)
+cd ai-automation-dashboard
+```
+
+### 2. Backend Setup
+Create virtual environment:
+```bash
+python -m venv venv
+```
+
+Activate virtual environment:
+```bash
+# Windows:
+venv\Scripts\activate
+
+# Mac/Linux:
+source venv/bin/activate
+```
+
+Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+Create a `.env` file inside the backend folder and add your API key:
+```env
+OPENAI_API_KEY=your_api_key_here
+```
+
+Run backend:
+```bash
+python app.py
+```
+*Backend runs at: `http://localhost:5000`*
+
+### 3. Frontend Setup
+Navigate to the frontend folder and start the development server:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+*Frontend runs at: `http://localhost:5173`*
+
+---
+
+## Design Decisions
+
+- **Persistent Logging with SQLite:** Although persistence was optional, SQLite was implemented to demonstrate production-oriented architecture.
+- **Structured JSON Enforcement:** AI responses are constrained to JSON format to ensure frontend stability and predictable parsing.
+- **Separation of Concerns:** Frontend handles UI and state. Backend handles AI orchestration, logging, and analytics.
+- **Rerun with Preview:** Users can review previous results before triggering a new API call, preventing accidental API usage.
+- **Dashboard Metrics:** Lightweight analytics were added to monitor performance and system usage.
+
+---
+
+## What I Would Improve With More Time
+
+- CSV export for batch results
+- Streaming responses
+- Adjustable AI parameters (temperature, max tokens)
+- Authentication system
+- Unit testing (backend endpoints)
+- More modular prompt templates
+- Deployment of backend to managed cloud service
