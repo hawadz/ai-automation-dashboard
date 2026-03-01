@@ -57,14 +57,71 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
   };
 
   const handleExport = () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(results, null, 2));
-    const downloadAnchorNode = document.createElement('a');
+    if (!results.length) return;
+
+    const exportData = {
+      metadata: {
+        generated_at: new Date().toISOString(),
+        content_type: formData.content_type,
+        genre: formData.genre,
+        tone: formData.tone,
+        count: formData.count,
+        additional_context: formData.additional_context
+      },
+      results: results
+    };
+
+    const dataStr =
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(exportData, null, 2));
+
+    const downloadAnchorNode = document.createElement("a");
     downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "generated_content.json");
+    downloadAnchorNode.setAttribute(
+      "download",
+      "generated_content.json"
+    );
+
     document.body.appendChild(downloadAnchorNode);
     downloadAnchorNode.click();
     downloadAnchorNode.remove();
   };
+
+  const handleExportCSV = () => {
+    if (!results.length) return;
+
+    const metadataRows = [
+      `Content Type,${formData.content_type}`,
+      `Genre,${formData.genre}`,
+      `Tone,${formData.tone}`,
+      `Count,${formData.count}`,
+      `Additional Context,"${formData.additional_context.replace(/"/g, '""')}"`
+    ];
+
+    const separator = [""]; 
+
+    const resultRows = [
+      "No,Content",
+      ...results.map(
+        (item, i) => `${i + 1},"${item.replace(/"/g, '""')}"`
+      )
+    ];
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [...metadataRows, ...separator, ...resultRows].join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "generated_content.csv");
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div className="batch-wrapper">
 
@@ -155,9 +212,16 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
 
           <div className="results-header">
             <h5>Generation Results</h5>
-            <button className="export-btn" onClick={handleExport}>
-              Export JSON
-            </button>
+
+            <div className="export-actions">
+              <button className="export-btn" onClick={handleExport}>
+                Export JSON
+              </button>
+
+              <button className="export-btn secondary" onClick={handleExportCSV}>
+                Export CSV
+              </button>
+            </div>
           </div>
 
           {results.map((item, index) => (
