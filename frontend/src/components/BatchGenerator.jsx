@@ -59,7 +59,7 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/generate', formData);
+      const response = await axios.post('https://ai-automation-dashboard-production.up.railway.app/api/generate', formData);
       if (response.data.success) {
         if (results.length > 0) {
           setPreviousResults(results);

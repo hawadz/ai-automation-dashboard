@@ -45,7 +45,7 @@ const TaskLogs = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('http://127.0.0.1:5000/api/logs');
+      const response = await axios.get('https://ai-automation-dashboard-production.up.railway.app/api/logs');
       if (response.data.success) {
         setLogs(response.data.data);
       } else {
@@ -77,7 +77,7 @@ const TaskLogs = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/api/logs/${selectedLogId}`);
+      await axios.delete(`https://ai-automation-dashboard-production.up.railway.app/api/logs/${selectedLogId}`);
       fetchLogs();
     } catch (err) {
       console.error(err);

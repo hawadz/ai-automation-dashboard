@@ -61,7 +61,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
 
     try {
 
-      const response = await axios.post('http://127.0.0.1:5000/api/summarize', { text });
+      const response = await axios.post('https://ai-automation-dashboard-production.up.railway.app/api/summarize', { text });
 
       if (response.data.success) {
         setSummary(response.data.data);
