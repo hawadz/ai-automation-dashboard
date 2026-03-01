@@ -42,7 +42,7 @@ export default function Dashboard() {
 
   /* FETCH DASHBOARD STATS */
   const fetchStats = () => {
-    fetch("http://localhost:5000/api/dashboard-stats")
+    fetch("https://ai-automation-dashboard-production.up.railway.app/api/dashboard-stats")
       .then((res) => res.json())
       .then((data) => {
         setStats(data);

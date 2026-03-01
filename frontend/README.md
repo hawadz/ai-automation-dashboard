@@ -73,7 +73,7 @@ Run the backend server:
 
     python app.py
 
-*The backend runs on: http://localhost:5000*
+*The backend runs on: https://ai-automation-dashboard-production.up.railway.app*
 
 ### 3. Frontend Setup
 Navigate to the frontend folder:
