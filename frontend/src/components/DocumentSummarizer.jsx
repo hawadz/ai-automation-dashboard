@@ -31,6 +31,19 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
     }
   }, [summary]);
 
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      setText(event.target.result);
+    };
+
+    reader.readAsText(file);
+  };
+
   const handleSubmit = async (e) => {
     if (e) e.preventDefault();
     if (!text.trim()) {
@@ -47,9 +60,6 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
     setIsViewingPrevious(false);
 
     try {
-      if (summary) {
-        setOldSummary(summary);
-      }
 
       const response = await axios.post('http://127.0.0.1:5000/api/summarize', { text });
 
@@ -76,6 +86,16 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
       <div className="summarizer-card">
 
         <Form onSubmit={handleSubmit}>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Upload .txt File (Optional)</Form.Label>
+            <Form.Control
+              type="file"
+              accept=".txt"
+              onChange={handleFileUpload}
+            />
+          </Form.Group>
+
           <Form.Group>
             <Form.Label>Paste Document Text</Form.Label>
             <Form.Control
@@ -90,6 +110,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
           <button className="summarizer-btn" disabled={loading}>
             {loading ? "Summarizing..." : "Summarize Document →"}
           </button>
+
         </Form>
 
         {error && <div className="summarizer-error">{error}</div>}

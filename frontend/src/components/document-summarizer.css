@@ -138,3 +138,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
+
+.summarizer-card input[type="file"] {
+  margin-bottom: 10px;
+}
