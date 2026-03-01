@@ -1,36 +1,41 @@
-# Agate AI Suite — Content Pipeline Dashboard (Option B)
+# Agate AI Suite - Content Pipeline Dashboard (Option B)
 
 Agate AI Suite is a full-stack AI-powered content automation dashboard built for internal game studio workflows.
 
-This project was developed as part of the **Agate Technical Test — Option B (Content Pipeline Dashboard)**.
+This project was developed as part of the **Agate Technical Test - Option B (Content Pipeline Dashboard)**.
 
-It focuses on delivering a functional end-to-end MVP that integrates real AI services, persistent logging, and a clean dashboard interface within a limited time constraint.
+It delivers a functional end-to-end MVP integrating real AI services, persistent logging, dashboard analytics, and a clean full-stack architecture within a limited time constraint.
 
 ---
 
 ## Repository
 
-**GitHub:** https://github.com/hawadz/ai-automation-dashboard
+**GitHub:**
+https://github.com/hawadz/ai-automation-dashboard
 
 ---
 
 ## Live Demo
 
-**Deployment Platform:** Vercel  
-**Public URL:** *(To be added after deployment)*
+**Frontend (Vercel):**
+https://ai-automation-dashboard-fj44.vercel.app
+
+**Backend (Railway):**
+https://ai-automation-dashboard-production.up.railway.app
 
 ---
 
 ## Option Chosen
 
-**Option B — Content Pipeline Dashboard**
+**Option B - Content Pipeline Dashboard**
 
 This option was selected to demonstrate:
-- Breadth of feature implementation  
-- Real AI API integration  
-- Functional end-to-end architecture  
-- Clean full-stack structure  
-- Production-minded logging system  
+- Breadth of feature implementation
+- Real AI API integration
+- Functional end-to-end architecture
+- Clean separation of frontend and backend
+- Persistent logging with analytics
+- Production-minded deployment setup
 
 ---
 
@@ -39,8 +44,8 @@ This option was selected to demonstrate:
 ### 1. Batch Content Generator
 Generate multiple structured content items in a single request.
 
-Users can specify:
-- Content type (e.g., NPC dialogue, item descriptions, quest summaries)
+**Users can specify:**
+- Content type (NPC dialogue, item descriptions, quest summaries)
 - Genre
 - Tone
 - Number of items
@@ -51,12 +56,15 @@ Users can specify:
 - Clean list display
 - Persistent logging
 - Re-run previous generations
-- Search and filter support via Task Logs
+- Search and filter via Task Logs
+- Duration tracking per execution
 
 *All generations are stored in the database with execution duration and status tracking.*
 
+---
+
 ### 2. Document Summarizer
-Summarizes long text into structured output including:
+Summarizes long text into structured output:
 - TL;DR
 - Key Points
 - Action Items
@@ -66,10 +74,13 @@ Summarizes long text into structured output including:
 - Persistent task history
 - Error handling for empty inputs
 - Clean loading states
-- Accessible from centralized logs
+- Centralized log access
+- Execution duration tracking
+
+---
 
 ### 3. Task Logs & Dashboard
-A centralized monitoring system for all AI task executions.
+Centralized monitoring system for all AI task executions.
 
 **Each task stores:**
 - Timestamp
@@ -90,7 +101,7 @@ A centralized monitoring system for all AI task executions.
 - Delete logs
 - Pagination
 - Search functionality
-- Filtering by type, status, and date
+- Filtering by type and status
 - Dark mode support
 
 *Persistent storage is implemented using SQLite.*
@@ -103,7 +114,7 @@ A centralized monitoring system for all AI task executions.
 - React (Vite)
 - React Router
 - Axios
-- Custom CSS (responsive & dark mode)
+- Custom CSS (responsive + dark mode)
 
 **Backend:**
 - Flask
@@ -115,7 +126,7 @@ A centralized monitoring system for all AI task executions.
 
 **Deployment:**
 - Vercel (Frontend)
-- Backend deployed separately (if applicable)
+- Railway (Backend)
 
 ---
 
@@ -153,20 +164,23 @@ Used for:
 Prompts were structured to:
 - Enforce valid JSON responses
 - Reduce hallucinations
-- Ensure consistent structured outputs
+- Ensure predictable structured outputs
 
-*The `response_format={"type": "json_object"}` parameter was used to enforce JSON compliance.*
+*The parameter `response_format={"type": "json_object"}` was used to enforce strict JSON compliance.*
+
+---
 
 ### 2. ChatGPT
 Used for:
-- Debugging backend configuration issues
+- Debugging backend deployment issues (Railway & environment configuration)
 - Refining prompt structure
 - Improving frontend architecture
 - Code cleanup and refactoring
-- UX optimization suggestions
+- UX improvements
 - Error handling improvements
+- Deployment troubleshooting
 
-*AI tools were used as development accelerators while maintaining architectural decisions and implementation control.*
+*AI tools were used as development accelerators while maintaining architectural decisions and implementation ownership.*
 
 ---
 
@@ -184,12 +198,12 @@ Create virtual environment:
 python -m venv venv
 ```
 
-Activate virtual environment:
+Activate environment:
 ```bash
-# Windows:
+# Windows
 venv\Scripts\activate
 
-# Mac/Linux:
+# Mac/Linux
 source venv/bin/activate
 ```
 
@@ -198,7 +212,7 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-Create a `.env` file inside the backend folder and add your API key:
+Create `.env` file inside backend folder:
 ```env
 OPENAI_API_KEY=your_api_key_here
 ```
@@ -207,35 +221,37 @@ Run backend:
 ```bash
 python app.py
 ```
-*Backend runs at: `https://ai-automation-dashboard-production.up.railway.app`*
+* **Local backend runs at:** `http://localhost:5000`
+* **Production backend:** `https://ai-automation-dashboard-production.up.railway.app`
 
 ### 3. Frontend Setup
-Navigate to the frontend folder and start the development server:
+Navigate to frontend:
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-*Frontend runs at: `http://localhost:5173`*
+* **Local frontend runs at:** `http://localhost:5173`
+* **Production frontend:** `https://ai-automation-dashboard-fj44.vercel.app`
 
 ---
 
 ## Design Decisions
-
-- **Persistent Logging with SQLite:** Although persistence was optional, SQLite was implemented to demonstrate production-oriented architecture.
-- **Structured JSON Enforcement:** AI responses are constrained to JSON format to ensure frontend stability and predictable parsing.
-- **Separation of Concerns:** Frontend handles UI and state. Backend handles AI orchestration, logging, and analytics.
-- **Rerun with Preview:** Users can review previous results before triggering a new API call, preventing accidental API usage.
-- **Dashboard Metrics:** Lightweight analytics were added to monitor performance and system usage.
+- **Persistent logging with SQLite** to demonstrate production-oriented architecture.
+- **Structured JSON enforcement** to ensure frontend stability.
+- **Clear separation of concerns** between UI and AI orchestration.
+- **Execution duration tracking** for performance monitoring.
+- **Re-run preview mechanism** to prevent unnecessary API usage.
+- **Dashboard analytics** for monitoring system health and usage.
 
 ---
 
 ## What I Would Improve With More Time
-
 - CSV export for batch results
-- Streaming responses
 - Adjustable AI parameters (temperature, max tokens)
-- Authentication system
-- Unit testing (backend endpoints)
-- More modular prompt templates
-- Deployment of backend to managed cloud service
+- Streaming responses
+- Authentication & role management
+- Unit testing for backend endpoints
+- Modular prompt templates
+- Containerization (Docker) for more scalable deployment
+- Replace SQLite with managed database for production scaling
