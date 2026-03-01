@@ -52,7 +52,7 @@ body {
 }
 
 .nav-primary {
-  background: #6366F1;
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
   box-shadow: 0 6px 16px rgba(99, 102, 241, 0.25);
   color: white;
   border: none;

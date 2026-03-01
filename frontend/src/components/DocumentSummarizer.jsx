@@ -108,7 +108,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
           </Form.Group>
 
           <button className="summarizer-btn" disabled={loading}>
-            {loading ? "Summarizing..." : "Summarize Document →"}
+            {loading ? "Summarizing..." : "Summarize Document"}
           </button>
 
         </Form>
@@ -167,7 +167,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
           ) : (
             <>
               <div className="tldr-box">
-                <h6>TL;DR</h6>
+                <h6>Summary Overview</h6>
                 <p>{summary.tldr}</p>
               </div>
 

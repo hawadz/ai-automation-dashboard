@@ -8,6 +8,10 @@
 /* SIDEBAR */
 .sidebar {
   width: 260px;
+  height: 100vh;              
+  position: fixed;           
+  left: 0;
+  top: 0;
   background: var(--bg-card);
   border-right: 1px solid var(--border-color);
   padding: 24px;
@@ -15,6 +19,7 @@
   flex-direction: column;
   justify-content: space-between;
   transition: 0.3s ease;
+  overflow: hidden;
 }
 
 .dashboard-layout.collapsed .sidebar {
@@ -133,8 +138,15 @@
 /* MAIN */
 .main-content {
   flex: 1;
+  margin-left: 260px; 
   padding: 40px;
   background: var(--bg-main);
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+.dashboard-layout.collapsed .main-content {
+  margin-left: 90px;
 }
 
 /* KPI */
