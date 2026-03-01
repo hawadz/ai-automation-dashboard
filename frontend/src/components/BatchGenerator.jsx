@@ -298,7 +298,7 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
       {!loading && (results.length > 0 || previousResults) && (
         <div className="batch-results fade-in">
 
-          {/* ===== HEADER ===== */}
+          {/* HEADER */}
           <div className="results-header">
             <h5>Generation Results</h5>
 
@@ -329,19 +329,19 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
             </div>
           </div>
 
-          {/* ===== CURRENT ===== */}
+          {/* CURRENT */}
           {viewMode === "current" &&
             results.map((item, index) => (
               <ResultCard key={index} item={item} index={index} />
             ))}
 
-          {/* ===== PREVIOUS ===== */}
+          {/* PREVIOUS */}
           {viewMode === "previous" &&
             previousResults?.map((item, index) => (
               <ResultCard key={index} item={item} index={index} />
             ))}
 
-          {/* ===== COMPARE ===== */}
+          {/* COMPARE */}
           {viewMode === "compare" && (
             <div className="compare-grid">
               <div>
@@ -362,7 +362,6 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
             </div>
           )}
 
-          {/* ===== TOGGLE DI PALING BAWAH ===== */}
           {previousResults && (
             <div className="bottom-toggle-wrapper">
               <div className="view-toggle">

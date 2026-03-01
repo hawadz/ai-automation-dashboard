@@ -110,7 +110,7 @@
   display: inline-block;
 }
 
-/* ===== BUTTON SYSTEM ===== */
+/* BUTTON SYSTEM */
 
 .btn-primary-custom {
   background: linear-gradient(135deg,#6366F1,#8B5CF6);
@@ -209,7 +209,6 @@
   padding: 8px 12px;
 }
 
-/* File selector button styling */
 .summarizer-card input[type="file"]::file-selector-button {
   background: linear-gradient(135deg,#6366F1,#8B5CF6);
   color: white;
@@ -286,7 +285,7 @@
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
-/* ===== MODAL ===== */
+/* MODAL */
 
 .custom-modal-overlay {
   position: fixed;

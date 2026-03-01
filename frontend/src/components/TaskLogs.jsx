@@ -10,7 +10,6 @@ const TaskLogs = () => {
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedLogId, setSelectedLogId] = useState(null);
-  const [deleting, setDeleting] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const logsPerPage = 5;
   const [showFilter, setShowFilter] = useState(false);
@@ -77,14 +76,12 @@ const TaskLogs = () => {
   };
 
   const confirmDelete = async () => {
-    setDeleting(true);
     try {
       await axios.delete(`http://127.0.0.1:5000/api/logs/${selectedLogId}`);
       fetchLogs();
     } catch (err) {
       console.error(err);
     } finally {
-      setDeleting(false);
       setShowDeleteModal(false);
       setSelectedLogId(null);
     }

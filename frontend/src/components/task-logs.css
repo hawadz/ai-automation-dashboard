@@ -57,11 +57,6 @@
   border-radius: 999px;
 }
 
-.filter-btn:hover {
-  background: white;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
-
 .filter-dropdown {
   position: absolute;
   top: 60px;
@@ -167,18 +162,6 @@
   margin-bottom: 20px;
 }
 
-/* LOADING / EMPTY */
-.logs-loading,
-.logs-empty {
-  padding: 40px;
-  text-align: center;
-  background: var(--bg-card);
-  border-radius: 18px;
-  box-shadow: var(--shadow-soft);
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-}
-
 /* LIST */
 .logs-list {
   display: flex;
@@ -255,16 +238,6 @@
 }
 
 /* JSON BOX */
-.log-input {
-  margin-top: 15px;
-  background: #0F172A;
-  color: #E2E8F0;
-  padding: 15px;
-  border-radius: 12px;
-  overflow-x: auto;
-  font-size: 12px;
-}
-
 .log-actions {
   margin-top: 12px;
   display: flex;
@@ -337,16 +310,6 @@
   opacity: 0.85;
 }
 
-/* OPTIONAL: Dark mode JSON tweak */
-body.dark-mode .log-input {
-  background: #020617;
-  color: #CBD5E1;
-}
-
-.log-input pre {
-  margin: 0;
-}
-
 .logs-search {
   height: 42px;
   width: 260px;
@@ -402,12 +365,7 @@ body.dark-mode .logs-search:focus {
   cursor: not-allowed;
 }
 
-@keyframes slideIn {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-
-/* ===== MODAL ===== */
+/* MODAL */
 
 .custom-modal-overlay {
   position: fixed;
@@ -510,11 +468,6 @@ body.dark-mode .filter-dropdown input {
 .modal-btn.cancel:hover {
   transform: translateY(-2px);
   box-shadow: 0 14px 30px rgba(99,102,241,0.35);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
 }
 
 .log-card {

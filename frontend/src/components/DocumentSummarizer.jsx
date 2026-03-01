@@ -154,7 +154,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
             </div>
           )}
 
-          {/* ===== CURRENT VIEW ===== */}
+          {/* CURRENT VIEW  */}
           {viewMode === "current" && (
             <>
               <div className="tldr-box">
@@ -188,7 +188,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
             </>
           )}
 
-          {/* ===== PREVIOUS VIEW ===== */}
+          {/* PREVIOUS VIEW */}
           {viewMode === "previous" && oldSummary && (
             <>
               <div className="tldr-box">
@@ -222,11 +222,11 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
             </>
           )}
 
-          {/* ===== COMPARE VIEW ===== */}
+          {/* COMPARE VIEW */}
           {viewMode === "compare" && oldSummary && (
             <div className="compare-grid">
 
-              {/* ===== NEW RESULT ===== */}
+              {/* NEW RESULT */}
               <div className="summary-column">
                 <h6 className="compare-title new">New Result</h6>
 
@@ -258,7 +258,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
                 </div>
               </div>
 
-              {/* ===== PREVIOUS RESULT ===== */}
+              {/* PREVIOUS RESULT */}
               <div className="summary-column">
                 <h6 className="compare-title previous">Previous Result</h6>
 
@@ -293,7 +293,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
             </div>
           )}
 
-          {/* ===== BOTTOM TOGGLE ===== */}
+          {/* BOTTOM TOGGLE*/}
           {oldSummary && summary && oldSummary !== summary && (
             <div className="bottom-toggle-wrapper">
               <div className="view-toggle">

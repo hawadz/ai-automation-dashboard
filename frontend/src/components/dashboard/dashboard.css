@@ -194,7 +194,6 @@
   border: 1px solid var(--border-color);
 }
 
-/* Dark mode skeleton */
 body.dark-mode .skeleton-box {
   background: linear-gradient(
     90deg,
