@@ -31,6 +31,7 @@ class TaskLog(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     task_type = db.Column(db.String(50), nullable=False)
     input_parameters = db.Column(db.Text, nullable=False)
+    output_data = db.Column(db.Text, nullable=True)
     status = db.Column(db.String(20), nullable=False)
     error_message = db.Column(db.Text, nullable=True)
     duration = db.Column(db.Float, nullable=True)  # duration in seconds
@@ -41,6 +42,7 @@ class TaskLog(db.Model):
             "timestamp": self.timestamp.strftime("%Y-%m-%d %H:%M:%S UTC"),
             "task_type": self.task_type,
             "input_parameters": json.loads(self.input_parameters),
+            "output_data": json.loads(self.output_data) if self.output_data else None,
             "status": self.status,
             "error_message": self.error_message,
             "duration": self.duration
@@ -50,11 +52,12 @@ with app.app_context():
     db.create_all()
 
 # HELPER FUNCTION
-def log_task(task_type, input_params, status, duration, error_message=None):
+def log_task(task_type, input_params, status, duration, error_message=None, output_data=None):
     try:
         new_log = TaskLog(
             task_type=task_type,
             input_parameters=json.dumps(input_params),
+            output_data=json.dumps(output_data) if output_data else None,
             status=status,
             duration=duration,
             error_message=error_message
@@ -102,7 +105,7 @@ def generate_content():
         items = result_json.get('results', [])
 
         duration = round(time.time() - start_time, 3)
-        log_task('generate', input_params, 'success', duration)
+        log_task('generate', input_params, 'success', duration, output_data=items)
 
         return jsonify({"success": True, "data": items})
 
@@ -118,7 +121,7 @@ def summarize_document():
     data = request.json
     text = data.get('text', '')
 
-    input_params = {"text_length": len(text)}
+    input_params = {"text": text}
 
     if not text:
         return jsonify({"success": False, "error": "Text is required"}), 400
@@ -138,7 +141,7 @@ def summarize_document():
         result_json = json.loads(response.choices[0].message.content)
 
         duration = round(time.time() - start_time, 3)
-        log_task('summarize', input_params, 'success', duration)
+        log_task('summarize', input_params, 'success', duration, output_data=result_json)
 
         return jsonify({"success": True, "data": result_json})
 

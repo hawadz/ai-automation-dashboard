@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import BatchGenerator from "../BatchGenerator";
 import DocumentSummarizer from "../DocumentSummarizer";
 import TaskLogs from "../TaskLogs";
@@ -7,6 +7,7 @@ import "./dashboard.css";
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [active, setActive] = useState("generator");
   const [darkMode, setDarkMode] = useState(false);
@@ -58,13 +59,29 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (location.state?.target) {
+      setActive(location.state.target);
+    }
+  }, [location.state]);
+
   /* CONTENT SWITCH */
   const renderContent = () => {
     switch (active) {
       case "generator":
-        return <BatchGenerator />;
+        return (
+          <BatchGenerator
+            rerunData={location.state?.rerunData}
+            previousOutput={location.state?.previousOutput}
+          />
+        );
       case "summarizer":
-        return <DocumentSummarizer />;
+        return (
+          <DocumentSummarizer
+            rerunData={location.state?.rerunData}
+            previousOutput={location.state?.previousOutput}
+          />
+        );
       case "logs":
         return <TaskLogs />;
       default:

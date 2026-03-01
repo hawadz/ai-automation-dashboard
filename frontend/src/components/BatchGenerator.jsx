@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col, Table, Spinner, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import './batch-generator.css';
 
-const BatchGenerator = () => {
+const BatchGenerator = ({ rerunData, previousOutput }) => {
   const [formData, setFormData] = useState({
     content_type: '',
     genre: '',
@@ -15,6 +15,24 @@ const BatchGenerator = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (rerunData) {
+      setFormData({
+        content_type: rerunData.content_type || '',
+        genre: rerunData.genre || '',
+        tone: rerunData.tone || '',
+        count: rerunData.count || '',
+        additional_context: rerunData.additional_context || ''
+      });
+    }
+  }, [rerunData]);
+
+  useEffect(() => {
+    if (previousOutput) {
+      setResults(previousOutput);
+    }
+  }, [previousOutput]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

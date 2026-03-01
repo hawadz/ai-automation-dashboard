@@ -1,13 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Spinner, Alert, Card, ListGroup } from 'react-bootstrap';
 import axios from 'axios';
 import './document-summarizer.css';
 
-const DocumentSummarizer = () => {
+const DocumentSummarizer = ({ rerunData, previousOutput }) => {
   const [text, setText] = useState('');
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (rerunData?.text) {
+      setText(rerunData.text);
+    }
+
+    if (previousOutput) {
+      setSummary(previousOutput);
+    }
+  }, [rerunData, previousOutput]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

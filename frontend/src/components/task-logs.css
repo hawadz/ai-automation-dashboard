@@ -140,6 +140,27 @@
   font-size: 12px;
 }
 
+.log-actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.rerun-btn {
+  background: linear-gradient(135deg,#6366F1,#8B5CF6);
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.rerun-btn:hover {
+  opacity: 0.85;
+}
+
 /* OPTIONAL: Dark mode JSON tweak */
 body.dark-mode .log-input {
   background: #020617;

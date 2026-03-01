@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Table, Button, Spinner, Alert, Badge } from 'react-bootstrap';
 import axios from 'axios';
 import './task-logs.css';
@@ -7,6 +8,8 @@ const TaskLogs = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const navigate = useNavigate();
 
   const fetchLogs = async () => {
     setLoading(true);
@@ -23,6 +26,18 @@ const TaskLogs = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRerun = (log) => {
+    navigate("/dashboard", {
+      state: {
+        rerunData: log.input_parameters,
+        previousOutput: log.output_data,
+        target: log.task_type === "summarize"
+          ? "summarizer"
+          : "generator"
+      }
+    });
   };
 
   useEffect(() => {
@@ -86,10 +101,27 @@ const TaskLogs = () => {
 
               <div className="log-input">
                 <pre>
-                  {JSON.stringify(log.input_parameters, null, 2)}
+                  {JSON.stringify(
+                    log.task_type === "summarize" && log.input_parameters.text
+                      ? {
+                        text:
+                          log.input_parameters.text.slice(0, 100) + "..."
+                      }
+                      : log.input_parameters,
+                    null,
+                    2
+                  )}
                 </pre>
               </div>
 
+              <div className="log-actions">
+                <button
+                  className="rerun-btn"
+                  onClick={() => handleRerun(log)}
+                >
+                  Re-run
+                </button>
+              </div>
             </div>
           ))}
         </div>
