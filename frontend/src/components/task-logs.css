@@ -144,15 +144,18 @@
   margin-top: 12px;
   display: flex;
   justify-content: flex-end;
+  gap: 4px;
 }
 
 .delete-btn {
-  background: rgba(239,68,68,0.1);
-  color: #EF4444;
+  background: linear-gradient(135deg,#EF4444,#DC2626);
   border: none;
-  padding: 6px 12px;
+  padding: 6px 14px;
   border-radius: 8px;
+  color: white;
+  font-size: 13px;
   cursor: pointer;
+  transition: 0.2s ease;
 }
 
 .rerun-btn {
