@@ -17,6 +17,9 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
   const [error, setError] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
   const [showValidationModal, setShowValidationModal] = useState(false);
+  const [previousResults, setPreviousResults] = useState(null);
+  const [viewMode, setViewMode] = useState("current");
+  const [exportOpen, setExportOpen] = useState(false);
 
   useEffect(() => {
     if (rerunData) {
@@ -58,9 +61,12 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
     try {
       const response = await axios.post('http://127.0.0.1:5000/api/generate', formData);
       if (response.data.success) {
+        if (results.length > 0) {
+          setPreviousResults(results);
+        }
+
         setResults(response.data.data);
-      } else {
-        setError(response.data.error);
+        setViewMode("current"); // selalu balik ke current
       }
     } catch (err) {
       setError(err.response?.data?.error || 'Gagal terhubung ke server backend');
@@ -88,16 +94,12 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
       "data:text/json;charset=utf-8," +
       encodeURIComponent(JSON.stringify(exportData, null, 2));
 
-    const downloadAnchorNode = document.createElement("a");
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute(
-      "download",
-      "generated_content.json"
-    );
-
-    document.body.appendChild(downloadAnchorNode);
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
+    const link = document.createElement("a");
+    link.setAttribute("href", dataStr);
+    link.setAttribute("download", "generated_content.json");
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   };
 
   const handleExportCSV = () => {
@@ -112,7 +114,6 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
     ];
 
     const separator = [""];
-
     const resultRows = [
       "No,Content",
       ...results.map(
@@ -129,7 +130,6 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
     link.setAttribute("download", "generated_content.csv");
-
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -142,6 +142,57 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
       return updated;
     });
   };
+
+  const ResultCard = ({ item, index }) => (
+    <div
+      className={`result-card ${editIndex === index ? "editing" : ""}`}
+    >
+      <span className="result-number">{index + 1}</span>
+
+      <div style={{ flex: 1, position: "relative" }}>
+
+        {editIndex === index ? (
+          <textarea
+            className="result-content"
+            value={item}
+            autoFocus
+            onChange={(e) =>
+              handleResultEdit(index, e.target.value)
+            }
+            onBlur={() => setEditIndex(null)}
+            rows={3}
+          />
+        ) : (
+          <div className="result-content">
+            {item}
+          </div>
+        )}
+
+        {viewMode === "current" && (
+          <span
+            className="edit-icon"
+            onClick={() => setEditIndex(index)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 20h9" />
+              <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+            </svg>
+          </span>
+        )}
+
+      </div>
+    </div>
+  );
 
   return (
     <div className="batch-wrapper">
@@ -218,6 +269,18 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
             {loading ? "Generating..." : "Generate Content"}
           </button>
 
+          {results.length > 0 && (
+            <button
+              type="button"
+              className="batch-btn secondary"
+              onClick={handleSubmit}
+              disabled={loading}
+              style={{ marginLeft: "10px" }}
+            >
+              Regenerate
+            </button>
+          )}
+
         </Form>
 
         {error && <div className="batch-error">{error}</div>}
@@ -232,75 +295,102 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
         </div>
       )}
 
-      {results.length > 0 && (
+      {!loading && (results.length > 0 || previousResults) && (
         <div className="batch-results fade-in">
+
+          {/* ===== HEADER ===== */}
           <div className="results-header">
             <h5>Generation Results</h5>
 
-            <div className="export-actions">
-              <button className="export-btn" onClick={handleExport}>
-                Export JSON
+            <div className="export-wrapper">
+              <button
+                className="export-btn"
+                onClick={() => setExportOpen(!exportOpen)}
+              >
+                Export ▾
               </button>
 
-              <button className="export-btn secondary" onClick={handleExportCSV}>
-                Export CSV
-              </button>
+              {exportOpen && (
+                <div className="export-dropdown">
+                  <div onClick={() => {
+                    handleExport();
+                    setExportOpen(false);
+                  }}>
+                    Download .JSON
+                  </div>
+                  <div onClick={() => {
+                    handleExportCSV();
+                    setExportOpen(false);
+                  }}>
+                    Download .CSV
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
-          {results.map((item, index) => (
-            <div
-              key={index}
-              className={`result-card ${editIndex === index ? "editing" : ""}`}
-            >
-              <span className="result-number">{index + 1}</span>
+          {/* ===== CURRENT ===== */}
+          {viewMode === "current" &&
+            results.map((item, index) => (
+              <ResultCard key={index} item={item} index={index} />
+            ))}
 
-              <div style={{ flex: 1, position: "relative" }}>
+          {/* ===== PREVIOUS ===== */}
+          {viewMode === "previous" &&
+            previousResults?.map((item, index) => (
+              <ResultCard key={index} item={item} index={index} />
+            ))}
 
-                {editIndex === index ? (
-                  <textarea
-                    className="result-content"
-                    value={item}
-                    autoFocus
-                    onChange={(e) => {
-                      const updated = [...results];
-                      updated[index] = e.target.value;
-                      setResults(updated);
-                    }}
-                    onBlur={() => setEditIndex(null)}
-                    rows={3}
-                  />
-                ) : (
-                  <div className="result-content">
-                    {item}
-                  </div>
-                )}
+          {/* ===== COMPARE ===== */}
+          {viewMode === "compare" && (
+            <div className="compare-grid">
+              <div>
+                <h6 className="compare-title">New Result</h6>
+                {results.map((item, index) => (
+                  <ResultCard key={index} item={item} index={index} />
+                ))}
+              </div>
 
-                <span
-                  className="edit-icon"
-                  onClick={() => setEditIndex(index)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M12 20h9" />
-                    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
-                  </svg>
-                </span>
-
+              <div>
+                <h6 className="compare-title previous">
+                  Previous Result
+                </h6>
+                {previousResults?.map((item, index) => (
+                  <ResultCard key={index} item={item} index={index} />
+                ))}
               </div>
             </div>
-          ))}
+          )}
+
+          {/* ===== TOGGLE DI PALING BAWAH ===== */}
+          {previousResults && (
+            <div className="bottom-toggle-wrapper">
+              <div className="view-toggle">
+                <button
+                  className={viewMode === "current" ? "active" : ""}
+                  onClick={() => setViewMode("current")}
+                >
+                  Current
+                </button>
+                <button
+                  className={viewMode === "previous" ? "active" : ""}
+                  onClick={() => setViewMode("previous")}
+                >
+                  Previous
+                </button>
+                <button
+                  className={viewMode === "compare" ? "active" : ""}
+                  onClick={() => setViewMode("compare")}
+                >
+                  Compare
+                </button>
+              </div>
+            </div>
+          )}
+
         </div>
       )}
+
       {showValidationModal && (
         <div className="custom-modal-overlay">
           <div className="custom-modal">
@@ -324,8 +414,9 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
             </div>
           </div>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   );
 };
 

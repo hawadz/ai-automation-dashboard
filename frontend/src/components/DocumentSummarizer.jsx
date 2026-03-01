@@ -9,9 +9,9 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
   const [oldSummary, setOldSummary] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [isViewingPrevious, setIsViewingPrevious] = useState(false);
   const [showValidationModal, setShowValidationModal] = useState(false);
   const resultRef = useRef(null);
+  const [viewMode, setViewMode] = useState("current");
 
   useEffect(() => {
     if (rerunData?.text) {
@@ -21,7 +21,6 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
     if (previousOutput) {
       setSummary(previousOutput);
       setOldSummary(previousOutput);
-      setIsViewingPrevious(true);
     }
   }, [rerunData, previousOutput]);
 
@@ -56,9 +55,9 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
       setOldSummary(summary);
     }
 
+    setViewMode("current");
     setLoading(true);
     setError(null);
-    setIsViewingPrevious(false);
 
     try {
 
@@ -121,21 +120,6 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
 
       </div>
 
-      {isViewingPrevious && (
-        <div className="previous-actions">
-          <span className="status-chip">
-            Viewing previous result
-          </span>
-
-          <button
-            className="btn-primary-custom btn-sm"
-            onClick={handleSubmit}
-          >
-            Regenerate
-          </button>
-        </div>
-      )}
-
       {loading && (
         <div className="summary-results skeleton-wrapper">
           <div className="skeleton-box skeleton-tldr"></div>
@@ -147,11 +131,99 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
         </div>
       )}
 
-      {summary && (
+      {summary && !loading && (
         <div className="summary-results fade-in" ref={resultRef}>
 
-          {oldSummary && oldSummary !== summary ? (
+          {summary && (
+            <div className="previous-actions">
 
+              {oldSummary && oldSummary === summary && (
+                <span className="status-chip">
+                  Viewing previous result
+                </span>
+              )}
+
+              <button
+                className="btn-primary-custom btn-sm"
+                onClick={handleSubmit}
+                disabled={loading}
+              >
+                {loading ? "Summarizing..." : "Regenerate"}
+              </button>
+
+            </div>
+          )}
+
+          {/* ===== CURRENT VIEW ===== */}
+          {viewMode === "current" && (
+            <>
+              <div className="tldr-box">
+                <h6>Summary Overview</h6>
+                <p>{summary?.tldr}</p>
+              </div>
+
+              <div className="summary-grid">
+                <div className="summary-card">
+                  <h6>Key Points</h6>
+                  <ul>
+                    {summary?.key_points?.map((point, index) => (
+                      <li key={index}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="summary-card">
+                  <h6>Action Items</h6>
+                  {summary?.action_items?.length > 0 ? (
+                    <ul>
+                      {summary.action_items.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="empty-text">No action items found.</p>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ===== PREVIOUS VIEW ===== */}
+          {viewMode === "previous" && oldSummary && (
+            <>
+              <div className="tldr-box">
+                <h6>Summary Overview</h6>
+                <p>{oldSummary?.tldr}</p>
+              </div>
+
+              <div className="summary-grid">
+                <div className="summary-card">
+                  <h6>Key Points</h6>
+                  <ul>
+                    {oldSummary?.key_points?.map((point, index) => (
+                      <li key={index}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="summary-card">
+                  <h6>Action Items</h6>
+                  {oldSummary?.action_items?.length > 0 ? (
+                    <ul>
+                      {oldSummary.action_items.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="empty-text">No action items found.</p>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+
+          {/* ===== COMPARE VIEW ===== */}
+          {viewMode === "compare" && oldSummary && (
             <div className="compare-grid">
 
               {/* ===== NEW RESULT ===== */}
@@ -219,42 +291,33 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
               </div>
 
             </div>
-
-          ) : (
-
-            <>
-              <div className="tldr-box">
-                <h6>Summary Overview</h6>
-                <p>{summary?.tldr}</p>
-              </div>
-
-              <div className="summary-grid">
-                <div className="summary-card">
-                  <h6>Key Points</h6>
-                  <ul>
-                    {summary?.key_points?.map((point, index) => (
-                      <li key={index}>{point}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="summary-card">
-                  <h6>Action Items</h6>
-                  {summary?.action_items?.length > 0 ? (
-                    <ul>
-                      {summary.action_items.map((item, index) => (
-                        <li key={index}>{item}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="empty-text">No action items found.</p>
-                  )}
-                </div>
-              </div>
-            </>
-
           )}
 
+          {/* ===== BOTTOM TOGGLE ===== */}
+          {oldSummary && summary && oldSummary !== summary && (
+            <div className="bottom-toggle-wrapper">
+              <div className="view-toggle">
+                <button
+                  className={viewMode === "current" ? "active" : ""}
+                  onClick={() => setViewMode("current")}
+                >
+                  Current
+                </button>
+                <button
+                  className={viewMode === "previous" ? "active" : ""}
+                  onClick={() => setViewMode("previous")}
+                >
+                  Previous
+                </button>
+                <button
+                  className={viewMode === "compare" ? "active" : ""}
+                  onClick={() => setViewMode("compare")}
+                >
+                  Compare
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
       {
