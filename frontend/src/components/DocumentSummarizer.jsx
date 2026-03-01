@@ -108,27 +108,32 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
             />
           </Form.Group>
 
-          <button className="summarizer-btn" disabled={loading}>
-            {loading ? "Summarizing..." : "Summarize Document"}
-          </button>
+          <div className="summarizer-actions">
+            <button
+              className="btn-primary-custom"
+              disabled={loading}
+            >
+              {loading ? "Summarizing..." : "Summarize Document"}
+            </button>
+          </div>
 
         </Form>
 
       </div>
 
       {isViewingPrevious && (
-        <div className="previous-label">
-          Viewing previous result
-        </div>
-      )}
+        <div className="previous-actions">
+          <span className="status-chip">
+            Viewing previous result
+          </span>
 
-      {isViewingPrevious && (
-        <button
-          className="regenerate-btn"
-          onClick={handleSubmit}
-        >
-          Regenerate
-        </button>
+          <button
+            className="btn-primary-custom btn-sm"
+            onClick={handleSubmit}
+          >
+            Regenerate
+          </button>
+        </div>
       )}
 
       {loading && (
@@ -146,35 +151,22 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
         <div className="summary-results fade-in" ref={resultRef}>
 
           {oldSummary && oldSummary !== summary ? (
+
             <div className="compare-grid">
 
-              <div className="summary-card">
-                <h6>Previous</h6>
-                <div className="tldr-box">
-                  <p>{oldSummary?.tldr}</p>
-                </div>
-              </div>
+              {/* ===== NEW RESULT ===== */}
+              <div className="summary-column">
+                <h6 className="compare-title new">New Result</h6>
 
-              <div className="summary-card">
-                <h6>New</h6>
                 <div className="tldr-box">
+                  <h6>Summary Overview</h6>
                   <p>{summary?.tldr}</p>
                 </div>
-              </div>
 
-            </div>
-          ) : (
-            <>
-              <div className="tldr-box">
-                <h6>Summary Overview</h6>
-                <p>{summary.tldr}</p>
-              </div>
-
-              <div className="summary-grid">
                 <div className="summary-card">
                   <h6>Key Points</h6>
                   <ul>
-                    {summary.key_points?.map((point, index) => (
+                    {summary?.key_points?.map((point, index) => (
                       <li key={index}>{point}</li>
                     ))}
                   </ul>
@@ -182,7 +174,73 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
 
                 <div className="summary-card">
                   <h6>Action Items</h6>
-                  {summary.action_items?.length > 0 ? (
+                  {summary?.action_items?.length > 0 ? (
+                    <ul>
+                      {summary.action_items.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="empty-text">No action items found.</p>
+                  )}
+                </div>
+              </div>
+
+              {/* ===== PREVIOUS RESULT ===== */}
+              <div className="summary-column">
+                <h6 className="compare-title previous">Previous Result</h6>
+
+                <div className="tldr-box">
+                  <h6>Summary Overview</h6>
+                  <p>{oldSummary?.tldr}</p>
+                </div>
+
+                <div className="summary-card">
+                  <h6>Key Points</h6>
+                  <ul>
+                    {oldSummary?.key_points?.map((point, index) => (
+                      <li key={index}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="summary-card">
+                  <h6>Action Items</h6>
+                  {oldSummary?.action_items?.length > 0 ? (
+                    <ul>
+                      {oldSummary.action_items.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="empty-text">No action items found.</p>
+                  )}
+                </div>
+              </div>
+
+            </div>
+
+          ) : (
+
+            <>
+              <div className="tldr-box">
+                <h6>Summary Overview</h6>
+                <p>{summary?.tldr}</p>
+              </div>
+
+              <div className="summary-grid">
+                <div className="summary-card">
+                  <h6>Key Points</h6>
+                  <ul>
+                    {summary?.key_points?.map((point, index) => (
+                      <li key={index}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="summary-card">
+                  <h6>Action Items</h6>
+                  {summary?.action_items?.length > 0 ? (
                     <ul>
                       {summary.action_items.map((item, index) => (
                         <li key={index}>{item}</li>
@@ -194,38 +252,41 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
                 </div>
               </div>
             </>
+
           )}
 
         </div>
       )}
-      {showValidationModal && (
-        <div className="custom-modal-overlay">
-          <div className="custom-modal">
+      {
+        showValidationModal && (
+          <div className="custom-modal-overlay">
+            <div className="custom-modal">
 
-            <div className="modal-icon">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                <path d="M12 9v4" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
-                <path d="M12 17h.01" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
-                <circle cx="12" cy="12" r="10" stroke="#EF4444" strokeWidth="2" />
-              </svg>
+              <div className="modal-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 9v4" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
+                  <path d="M12 17h.01" stroke="#EF4444" strokeWidth="2" strokeLinecap="round" />
+                  <circle cx="12" cy="12" r="10" stroke="#EF4444" strokeWidth="2" />
+                </svg>
+              </div>
+
+              <h4>Text Required</h4>
+              <p>Please enter or upload a document before summarizing.</p>
+
+              <div className="modal-actions">
+                <button
+                  className="modal-btn cancel"
+                  onClick={() => setShowValidationModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+
             </div>
-
-            <h4>Text Required</h4>
-            <p>Please enter or upload a document before summarizing.</p>
-
-            <div className="modal-actions">
-              <button
-                className="modal-btn cancel"
-                onClick={() => setShowValidationModal(false)}
-              >
-                Close
-              </button>
-            </div>
-
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 };
 

@@ -37,19 +37,6 @@
   box-shadow: 0 0 0 3px rgba(99,102,241,0.15) !important;
 }
 
-/* BUTTON */
-.summarizer-btn {
-  margin-top: 20px;
-  background: linear-gradient(135deg,#6366F1,#8B5CF6);
-  color: white;
-  border: none;
-  padding: 12px 28px;
-  border-radius: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(99,102,241,0.25);
-}
-
 /* ERROR */
 .summarizer-error {
   margin-top: 15px;
@@ -61,7 +48,7 @@
 
 /* RESULTS */
 .summary-results {
-  margin-top: 40px;
+  margin-top: 50px;
 }
 
 /* TLDR BOX */
@@ -123,20 +110,92 @@
   display: inline-block;
 }
 
-.regenerate-btn {
-  margin-top: 10px;
-  background: transparent;
-  border: 1px solid #6366F1;
-  color: #6366F1;
-  padding: 8px 16px;
-  border-radius: 8px;
+/* ===== BUTTON SYSTEM ===== */
+
+.btn-primary-custom {
+  background: linear-gradient(135deg,#6366F1,#8B5CF6);
+  color: white;
+  border: none;
+  padding: 12px 26px;
+  border-radius: 14px;
+  font-weight: 500;
   cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 8px 20px rgba(99,102,241,0.25);
+}
+
+.btn-primary-custom:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(99,102,241,0.35);
+}
+
+.btn-secondary-custom {
+  background: rgba(99,102,241,0.1);
+  color: #6366F1;
+  border: 1px solid rgba(99,102,241,0.2);
+  padding: 10px 22px;
+  border-radius: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary-custom:hover {
+  background: rgba(99,102,241,0.15);
+}
+
+.btn-danger-custom {
+  background: linear-gradient(135deg,#EF4444,#DC2626);
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.summarizer-actions {
+  margin-top: 28px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.previous-actions {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-sm {
+  padding: 8px 18px;
+  font-size: 14px;
 }
 
 .compare-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.summary-column {
+  display: flex;
+  flex-direction: column;
   gap: 20px;
+}
+
+.compare-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.compare-title.new {
+  color: #6366F1;
+}
+
+.compare-title.previous {
+  color: #94A3B8;
 }
 
 .summarizer-card input[type="file"] {
