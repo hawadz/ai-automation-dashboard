@@ -112,3 +112,29 @@
 .empty-text {
   color: var(--text-secondary);
 }
+
+.previous-label {
+  margin-top: 15px;
+  padding: 8px 14px;
+  background: rgba(99,102,241,0.1);
+  color: #6366F1;
+  border-radius: 8px;
+  font-size: 13px;
+  display: inline-block;
+}
+
+.regenerate-btn {
+  margin-top: 10px;
+  background: transparent;
+  border: 1px solid #6366F1;
+  color: #6366F1;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}

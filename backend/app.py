@@ -187,6 +187,20 @@ def dashboard_stats():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@app.route('/api/logs/<int:log_id>', methods=['DELETE'])
+def delete_log(log_id):
+    try:
+        log = TaskLog.query.get(log_id)
+        if not log:
+            return jsonify({"success": False, "error": "Log not found"}), 404
+
+        db.session.delete(log)
+        db.session.commit()
+
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

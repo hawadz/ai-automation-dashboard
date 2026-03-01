@@ -8,6 +8,8 @@ const TaskLogs = () => {
   const [logs, setLogs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedLogId, setSelectedLogId] = useState(null);
 
   const navigate = useNavigate();
 
@@ -38,6 +40,23 @@ const TaskLogs = () => {
           : "generator"
       }
     });
+  };
+
+  const openDeleteModal = (id) => {
+    setSelectedLogId(id);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await axios.delete(`http://127.0.0.1:5000/api/logs/${selectedLogId}`);
+      fetchLogs();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setShowDeleteModal(false);
+      setSelectedLogId(null);
+    }
   };
 
   useEffect(() => {
@@ -121,12 +140,64 @@ const TaskLogs = () => {
                 >
                   Re-run
                 </button>
+
+                <button
+                  className="delete-btn"
+                  onClick={() => openDeleteModal(log.id)}
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}
         </div>
       )}
 
+      {showDeleteModal && (
+        <div className="delete-overlay">
+          <div className="delete-modal">
+
+            <div className="delete-icon">
+              <svg
+                width="40"
+                height="40"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#302251"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14H6L5 6" />
+                <path d="M10 11v6" />
+                <path d="M14 11v6" />
+                <path d="M9 6V4h6v2" />
+              </svg>
+            </div>
+
+            <h5>Are you sure?</h5>
+            <p>This log will be deleted permanently.</p>
+
+            <div className="delete-actions">
+              <button
+                className="cancel-btn"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="confirm-delete-btn"
+                onClick={confirmDelete}
+              >
+                Delete
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 };

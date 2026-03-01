@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Form, Button, Spinner, Alert, Card, ListGroup } from 'react-bootstrap';
 import axios from 'axios';
 import './document-summarizer.css';
@@ -6,8 +6,11 @@ import './document-summarizer.css';
 const DocumentSummarizer = ({ rerunData, previousOutput }) => {
   const [text, setText] = useState('');
   const [summary, setSummary] = useState(null);
+  const [oldSummary, setOldSummary] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isViewingPrevious, setIsViewingPrevious] = useState(false);
+  const resultRef = useRef(null);
 
   useEffect(() => {
     if (rerunData?.text) {
@@ -16,22 +19,40 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
 
     if (previousOutput) {
       setSummary(previousOutput);
+      setOldSummary(previousOutput);
+      setIsViewingPrevious(true);
     }
   }, [rerunData, previousOutput]);
 
+
+  useEffect(() => {
+    if (summary && resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [summary]);
+
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!text.trim()) {
       setError("Please enter some text to summarize.");
       return;
     }
 
+    if (summary) {
+      setOldSummary(summary);
+    }
+
     setLoading(true);
     setError(null);
-    setSummary(null);
+    setIsViewingPrevious(false);
 
     try {
+      if (summary) {
+        setOldSummary(summary);
+      }
+
       const response = await axios.post('http://127.0.0.1:5000/api/summarize', { text });
+
       if (response.data.success) {
         setSummary(response.data.data);
       } else {
@@ -75,39 +96,74 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
 
       </div>
 
+      {isViewingPrevious && (
+        <div className="previous-label">
+          Viewing previous result
+        </div>
+      )}
+
+      {isViewingPrevious && (
+        <button
+          className="regenerate-btn"
+          onClick={handleSubmit}
+        >
+          Regenerate
+        </button>
+      )}
+
       {summary && (
-        <div className="summary-results">
+        <div className="summary-results" ref={resultRef}>
 
-          <div className="tldr-box">
-            <h6>TL;DR</h6>
-            <p>{summary.tldr}</p>
-          </div>
+          {oldSummary && oldSummary !== summary ? (
+            <div className="compare-grid">
 
-          <div className="summary-grid">
+              <div className="summary-card">
+                <h6>Previous</h6>
+                <div className="tldr-box">
+                  <p>{oldSummary?.tldr}</p>
+                </div>
+              </div>
 
-            <div className="summary-card">
-              <h6>Key Points</h6>
-              <ul>
-                {summary.key_points?.map((point, index) => (
-                  <li key={index}>{point}</li>
-                ))}
-              </ul>
+              <div className="summary-card">
+                <h6>New</h6>
+                <div className="tldr-box">
+                  <p>{summary?.tldr}</p>
+                </div>
+              </div>
+
             </div>
+          ) : (
+            <>
+              <div className="tldr-box">
+                <h6>TL;DR</h6>
+                <p>{summary.tldr}</p>
+              </div>
 
-            <div className="summary-card">
-              <h6>Action Items</h6>
-              {summary.action_items?.length > 0 ? (
-                <ul>
-                  {summary.action_items.map((item, index) => (
-                    <li key={index}>{item}</li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="empty-text">No action items found.</p>
-              )}
-            </div>
+              <div className="summary-grid">
+                <div className="summary-card">
+                  <h6>Key Points</h6>
+                  <ul>
+                    {summary.key_points?.map((point, index) => (
+                      <li key={index}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
 
-          </div>
+                <div className="summary-card">
+                  <h6>Action Items</h6>
+                  {summary.action_items?.length > 0 ? (
+                    <ul>
+                      {summary.action_items.map((item, index) => (
+                        <li key={index}>{item}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="empty-text">No action items found.</p>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
 
         </div>
       )}
