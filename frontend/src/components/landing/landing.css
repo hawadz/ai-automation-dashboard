@@ -1,4 +1,7 @@
-/* GLOBAL */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
@@ -612,3 +615,17 @@ body {
   font-size: 13px;
   color: #94A3B8;
 }
+
+/*Scroll Reveal*/
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.8s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+} 
+

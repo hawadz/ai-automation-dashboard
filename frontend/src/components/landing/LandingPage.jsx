@@ -1,9 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./landing.css";
 import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const reveals = document.querySelectorAll(".reveal");
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("active");
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    reveals.forEach((el) => observer.observe(el));
+  }, []);
 
   return (
     <div className="landing-wrapper">
@@ -39,19 +56,19 @@ export default function LandingPage() {
 
         {/* FLOATING ICONS */}
         <div className="floating-icon icon-1">
-          <img src="/icons/automation.png" alt="automation" />
+          <img src="/icons/icon-1.png" alt="automation" />
         </div>
 
         <div className="floating-icon icon-2">
-          <img src="/icons/summary.png" alt="summary" />
+          <img src="/icons/icon-2.png" alt="summary" />
         </div>
 
         <div className="floating-icon icon-3">
-          <img src="/icons/analytics.png" alt="analytics" />
+          <img src="/icons/icon-3.png" alt="analytics" />
         </div>
 
         <div className="floating-icon icon-4">
-          <img src="/icons/workflow.png" alt="workflow" />
+          <img src="/icons/icon-4.png" alt="workflow" />
         </div>
 
         {/* CENTER VISUAL CARD */}
@@ -89,14 +106,14 @@ export default function LandingPage() {
             className="primary-cta"
             onClick={() => navigate("/dashboard")}
           >
-            Launch Dashboard →
+            Try the Platform →
           </button>
         </div>
 
       </section>
 
       {/* STATS */}
-      <section className="stats">
+      <section className="stats reveal">
         <div className="stat-card">
           <h2>75K+</h2>
           <p>Automated Content Generated</p>
@@ -114,7 +131,7 @@ export default function LandingPage() {
       </section>
 
       {/* FEATURES */}
-      <section className="features">
+      <section className="features reveal">
         <h2>Built for Studio Teams</h2>
 
         <div className="feature-grid">
@@ -153,7 +170,7 @@ export default function LandingPage() {
       </section>
 
       {/* CORE MODULES */}
-      <section className="core-section">
+      <section className="core-section reveal">
 
         <div className="core-wrapper">
 
@@ -209,7 +226,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="cta-section">
+      <section className="cta-section reveal">
         <div className="cta-wrapper">
 
           <div className="cta-left">
