@@ -79,14 +79,7 @@
   align-items: center;
   margin-bottom: 20px;
   position: relative;
-}
-
-.bottom-toggle-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
-  margin-bottom: 10px;
-}
+} 
 
 .export-btn {
   background: var(--bg-card);

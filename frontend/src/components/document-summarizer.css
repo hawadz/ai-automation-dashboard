@@ -202,6 +202,28 @@
 
 .summarizer-card input[type="file"] {
   margin-bottom: 10px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+
+/* File selector button styling */
+.summarizer-card input[type="file"]::file-selector-button {
+  background: linear-gradient(135deg,#6366F1,#8B5CF6);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin-right: 12px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.summarizer-card input[type="file"]::file-selector-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(99,102,241,0.3);
 }
 
 /* SKELETON LOADING */
@@ -373,11 +395,18 @@
 .view-toggle button {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
+  color: var(--text-primary);  
   padding: 6px 14px;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 13px;
-  transition: 0.2s ease;
+  transition: all 0.2s ease;
+}
+
+/* hover state */
+.view-toggle button:hover {
+  background: rgba(99,102,241,0.1);
+  border-color: rgba(99,102,241,0.4);
 }
 
 .view-toggle button.active {

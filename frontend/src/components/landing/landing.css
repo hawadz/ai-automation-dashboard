@@ -389,8 +389,13 @@ body {
 
 .core-header h2 span {
   background: linear-gradient(135deg, #6366F1, #8B5CF6);
+ 
+  background-clip: text;
+
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+
+  color: transparent;
 }
 
 .core-header p {
