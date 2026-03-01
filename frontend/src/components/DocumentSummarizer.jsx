@@ -132,6 +132,17 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
         </button>
       )}
 
+      {loading && (
+        <div className="summary-results skeleton-wrapper">
+          <div className="skeleton-box skeleton-tldr"></div>
+
+          <div className="summary-grid">
+            <div className="skeleton-box skeleton-card"></div>
+            <div className="skeleton-box skeleton-card"></div>
+          </div>
+        </div>
+      )}
+
       {summary && (
         <div className="summary-results" ref={resultRef}>
 

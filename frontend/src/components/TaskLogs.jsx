@@ -84,7 +84,11 @@ const TaskLogs = () => {
       {error && <div className="logs-error">{error}</div>}
 
       {loading ? (
-        <div className="logs-loading">Loading logs...</div>
+        <div className="logs-list skeleton-wrapper">
+          <div className="skeleton-box skeleton-card"></div>
+          <div className="skeleton-box skeleton-card"></div>
+          <div className="skeleton-box skeleton-card"></div>
+        </div>
       ) : logs.length === 0 ? (
         <div className="logs-empty">
           No tasks have been executed yet.

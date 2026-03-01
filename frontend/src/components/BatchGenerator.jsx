@@ -98,7 +98,7 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
       `Additional Context,"${formData.additional_context.replace(/"/g, '""')}"`
     ];
 
-    const separator = [""]; 
+    const separator = [""];
 
     const resultRows = [
       "No,Content",
@@ -206,6 +206,14 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
         {error && <div className="batch-error">{error}</div>}
 
       </div>
+
+      {loading && (
+        <div className="batch-results skeleton-wrapper">
+          <div className="skeleton-box skeleton-card"></div>
+          <div className="skeleton-box skeleton-card"></div>
+          <div className="skeleton-box skeleton-card"></div>
+        </div>
+      )}
 
       {results.length > 0 && (
         <div className="batch-results">
