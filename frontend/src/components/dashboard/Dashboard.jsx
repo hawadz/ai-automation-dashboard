@@ -219,7 +219,7 @@ export default function Dashboard() {
 
         </div>
 
-        <div className="content-card">
+        <div className="content-card tab-content-animate">
           {renderContent()}
         </div>
 

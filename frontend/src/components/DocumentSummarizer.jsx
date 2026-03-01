@@ -83,7 +83,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
         <p>Extract key insights from long game design documents or lore.</p>
       </div>
 
-      <div className="summarizer-card">
+      <div className={`summarizer-card ${loading ? "loading-blur" : ""}`}>
 
         <Form onSubmit={handleSubmit}>
 
@@ -144,7 +144,7 @@ const DocumentSummarizer = ({ rerunData, previousOutput }) => {
       )}
 
       {summary && (
-        <div className="summary-results" ref={resultRef}>
+        <div className="summary-results fade-in" ref={resultRef}>
 
           {oldSummary && oldSummary !== summary ? (
             <div className="compare-grid">

@@ -130,7 +130,7 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
         <p>Generate multiple structured AI outputs in one request.</p>
       </div>
 
-      <div className="batch-card">
+      <div className={`batch-card ${loading ? "loading-blur" : ""}`}>
 
         <Form onSubmit={handleSubmit}>
 
@@ -216,8 +216,7 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
       )}
 
       {results.length > 0 && (
-        <div className="batch-results">
-
+        <div className="batch-results fade-in">
           <div className="results-header">
             <h5>Generation Results</h5>
 

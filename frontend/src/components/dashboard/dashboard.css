@@ -191,3 +191,18 @@ body.dark-mode .skeleton-box {
     #2d2d2d 63%
   );
 }
+
+.tab-content-animate {
+  animation: tabFade 0.25s ease;
+}
+
+@keyframes tabFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
