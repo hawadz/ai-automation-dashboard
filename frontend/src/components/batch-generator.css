@@ -1,0 +1,123 @@
+.batch-wrapper {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-primary);
+}
+
+/* HEADER */
+.batch-header h4 {
+  font-weight: 600;
+}
+
+.batch-header p {
+  color: var(--text-secondary);
+  margin-bottom: 25px;
+}
+
+/* CARD */
+.batch-card {
+  background: var(--bg-card);
+  padding: 35px;
+  border-radius: 24px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-color);
+}
+
+/* GRID */
+.batch-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* INPUT STYLE */
+.batch-card input,
+.batch-card textarea {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--border-color) !important;
+  padding: 10px 14px !important;
+  transition: 0.3s ease;
+}
+
+.batch-card input:focus,
+.batch-card textarea:focus {
+  border-color: #6366F1 !important;
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.15) !important;
+}
+
+/* BUTTON */
+.batch-btn {
+  margin-top: 25px;
+  background: linear-gradient(135deg,#6366F1,#8B5CF6);
+  color: white;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(99,102,241,0.25);
+}
+
+/* ERROR */
+.batch-error {
+  margin-top: 15px;
+  padding: 10px;
+  background: rgba(239,68,68,0.1);
+  color: #EF4444;
+  border-radius: 10px;
+}
+
+/* RESULTS */
+.batch-results {
+  margin-top: 40px;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.export-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* RESULT CARD */
+.result-card {
+  display: flex;
+  gap: 20px;
+  background: var(--bg-card);
+  padding: 20px;
+  border-radius: 18px;
+  box-shadow: var(--shadow-soft);
+  border: 1px solid var(--border-color);
+  margin-bottom: 15px;
+}
+
+/* NUMBER BADGE */
+.result-number {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg,#6366F1,#8B5CF6);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* CONTENT */
+.result-content {
+  flex: 1;
+  outline: none;
+  color: var(--text-primary);
+}
