@@ -15,6 +15,7 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [editIndex, setEditIndex] = useState(null);
 
   useEffect(() => {
     if (rerunData) {
@@ -122,6 +123,14 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
     document.body.removeChild(link);
   };
 
+  const handleResultEdit = (index, newValue) => {
+    setResults(prevResults => {
+      const updated = [...prevResults];
+      updated[index] = newValue;
+      return updated;
+    });
+  };
+
   return (
     <div className="batch-wrapper">
 
@@ -198,7 +207,7 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
           </Form.Group>
 
           <button className="batch-btn" disabled={loading}>
-            {loading ? "Generating..." : "Generate Content →"}
+            {loading ? "Generating..." : "Generate Content"}
           </button>
 
         </Form>
@@ -232,18 +241,56 @@ const BatchGenerator = ({ rerunData, previousOutput }) => {
           </div>
 
           {results.map((item, index) => (
-            <div key={index} className="result-card">
+            <div
+              key={index}
+              className={`result-card ${editIndex === index ? "editing" : ""}`}
+            >
               <span className="result-number">{index + 1}</span>
-              <div
-                contentEditable
-                suppressContentEditableWarning
-                className="result-content"
-              >
-                {item}
+
+              <div style={{ flex: 1, position: "relative" }}>
+
+                {editIndex === index ? (
+                  <textarea
+                    className="result-content"
+                    value={item}
+                    autoFocus
+                    onChange={(e) => {
+                      const updated = [...results];
+                      updated[index] = e.target.value;
+                      setResults(updated);
+                    }}
+                    onBlur={() => setEditIndex(null)}
+                    rows={3}
+                  />
+                ) : (
+                  <div className="result-content">
+                    {item}
+                  </div>
+                )}
+
+                <span
+                  className="edit-icon"
+                  onClick={() => setEditIndex(index)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M12 20h9" />
+                    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z" />
+                  </svg>
+                </span>
+
               </div>
             </div>
           ))}
-
         </div>
       )}
 
